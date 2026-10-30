@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdbool.h>
 
@@ -28,20 +27,15 @@ bool hasDuplicateParentheses(char expression[]) {
 
             top--;
 
-            if (elementsInside == 0) {
+            if (elementsInside <= 1) {
                 return true;
             }
-        } else if (ch == '(') {
-            if (top == MAX - 1) {
-                printf("Expression is too long.\n");
-                return false;
-            }
-            stack[++top] = ch;
         } else {
             if (top == MAX - 1) {
                 printf("Expression is too long.\n");
                 return false;
             }
+
             stack[++top] = ch;
         }
     }
@@ -56,7 +50,7 @@ bool hasDuplicateParentheses(char expression[]) {
     return false;
 }
 
-int main() {
+int main(void) {
     char expression[MAX];
 
     printf("Enter an expression: ");

@@ -1,0 +1,154 @@
+
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int coefficient;
+    int exponent;
+    struct Node *next;
+};
+
+// Function to create a new node
+struct Node *createNode(int coefficient, int exponent) {
+    struct Node *newNode = malloc(sizeof(struct Node));
+
+    if (newNode == NULL) {
+        printf("Memory allocation failed.\n");
+        return NULL;
+    }
+
+    newNode->coefficient = coefficient;
+    newNode->exponent = exponent;
+    newNode->next = NULL;
+
+    return newNode;
+}
+
+// Function to create the polynomial
+struct Node *createPolynomial(int n) {
+    struct Node *head = NULL;
+    struct Node *tail = NULL;
+
+    int coefficient, exponent;
+
+    for (int i = 0; i < n; i++) {
+        printf("Enter coefficient and exponent of term %d: ", i + 1);
+
+        if (scanf("%d %d", &coefficient, &exponent) != 2 ||
+            exponent < 0) {
+            printf("Invalid term.\n");
+
+            while (head != NULL) {
+                struct Node *temp = head;
+                head = head->next;
+                free(temp);
+            }
+
+            return NULL;
+        }
+
+        if (coefficient == 0) {
+            continue;
+        }
+
+        struct Node *newNode = createNode(coefficient, exponent);
+
+        if (newNode == NULL) {
+            while (head != NULL) {
+                struct Node *temp = head;
+                head = head->next;
+                free(temp);
+            }
+
+            return NULL;
+        }
+
+        if (head == NULL) {
+            head = tail = newNode;
+        } else {
+            tail->next = newNode;
+            tail = newNode;
+        }
+    }
+
+    return head;
+}
+
+// Function to display the polynomial
+void displayPolynomial(struct Node *head) {
+    if (head == NULL) {
+        printf("Polynomial: 0\n");
+        return;
+    }
+
+    printf("Polynomial: ");
+
+    int first = 1;
+
+    while (head != NULL) {
+        int coefficient = head->coefficient;
+        int exponent = head->exponent;
+
+        if (!first) {
+            if (coefficient > 0) {
+                printf(" + ");
+            } else {
+                printf(" - ");
+            }
+        } else if (coefficient < 0) {
+            printf("-");
+        }
+
+        int absCoefficient =
+            coefficient < 0 ? -coefficient : coefficient;
+
+        if (exponent == 0) {
+            printf("%d", absCoefficient);
+        } else {
+            if (absCoefficient != 1) {
+                printf("%d", absCoefficient);
+            }
+
+            printf("x");
+
+            if (exponent != 1) {
+                printf("^%d", exponent);
+            }
+        }
+
+        first = 0;
+        head = head->next;
+    }
+
+    printf("\n");
+}
+
+// Function to free allocated memory
+void freeList(struct Node *head) {
+    while (head != NULL) {
+        struct Node *temp = head;
+        head = head->next;
+        free(temp);
+    }
+}
+
+int main(void) {
+    int n;
+
+    printf("Enter number of terms in polynomial: ");
+
+    if (scanf("%d", &n) != 1 || n < 0) {
+        printf("Invalid number of terms.\n");
+        return 1;
+    }
+
+    printf("Enter coefficient and exponent of each term:\n");
+
+    struct Node *polynomial = createPolynomial(n);
+
+    displayPolynomial(polynomial);
+
+    freeList(polynomial);
+
+    return 0;
+}

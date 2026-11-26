@@ -13,7 +13,6 @@ void sorting(int *arr, int len) {
         }
     }
 }
-
 void insertion(int *arr, int len) {
     int element, index = 0;
 

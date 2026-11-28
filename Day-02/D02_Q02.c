@@ -7,7 +7,6 @@ int findGCD(int a, int b) {
 
     return findGCD(b, a % b);
 }
-
 int main() {
     int num1, num2, gcd;
 
